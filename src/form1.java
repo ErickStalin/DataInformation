@@ -20,7 +20,7 @@ public class form1 {
 
                 try{
                     con = getConecction();
-                    ps = con.prepareStatement("INSERT INTO datosPersona(IdPerson,NomPerson,CelPerson,MailPerson)");
+                    ps = con.prepareStatement("INSERT INTO datosPersona(IdPerson,NomPerson,CelPerson,MailPerson) VALUES(?,?,?,?)");
                     ps.setString(1,textField2.getText());
                     ps.setString(2,textField1.getText());
                     ps.setString(3,textField4.getText());
@@ -33,8 +33,9 @@ public class form1 {
                     else{
                         JOptionPane.showMessageDialog(null,"Error");
                     }
-                } catch (HeadlessException | SQLException f) {
-                    System.out.println(f);
+                    con.close();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
                 }
 
             }
