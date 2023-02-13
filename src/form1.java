@@ -10,9 +10,13 @@ public class form1 {
     private JTextField correo;
     private JButton GUARDARButton;
     private JPanel p1;
+    private JButton ACTUALIZARButton;
+    private JButton BUSCARButton;
+    PreparedStatement pd;
+
     public static Connection getConecction() {
         Connection cn = null;
-        String base = "Estudiantes"; //Nombre de la BD
+        String base = "Estudiantes"; //Sombre de la BD
         String url = "jdbc:mysql://localhost:3306/" + base; //Direccion, puerto y nombre BD
         String user = "root"; //Usuario
         String pass = "0986167219"; //Contraseña
@@ -44,6 +48,52 @@ public class form1 {
                         JOptionPane.showMessageDialog(null,"Error");
                     }
                     cn.close();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        BUSCARButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection cx;
+                try{
+                cx = getConecction();
+                String qr = "select * from datosEstudiantes  where Id = "+id.getText()+";";
+                Statement s = cx.createStatement();
+                ResultSet rs = s.executeQuery(qr);
+                System.out.println(rs);
+                while(rs.next()) {
+                    nombre.setText(rs.getString(2));
+                    celular.setText(rs.getString(3));
+                    correo.setText(rs.getString(4));
+                }
+                cx.close();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+            }
+        });
+        ACTUALIZARButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection ct;
+                try {
+                    String qr = "Update datosEstudiantes set Nombre = ?, celular = ?, email = ? where Id = "+id.getText();
+                    ct = getConecction();
+                    pd = ct.prepareStatement(qr);
+                    pd.setString(1, nombre.getText());
+                    pd.setString(2, celular.getText());
+                    pd.setString(3, correo.getText());
+                    pd.executeUpdate();
+                    System.out.println(pd);
+                    int res = pd.executeUpdate();
+                    if (res > 0) {
+                        JOptionPane.showMessageDialog(null,"Persona actualizada correctamente");
+                    } else {
+                        JOptionPane.showMessageDialog(null,"Error");
+                    }
+                    ct.close();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
