@@ -12,6 +12,7 @@ public class form1 {
     private JPanel p1;
     private JButton ACTUALIZARButton;
     private JButton BUSCARButton;
+    private JButton ELIMINARButton;
     PreparedStatement pd;
 
     public static Connection getConecction() {
@@ -94,6 +95,28 @@ public class form1 {
                         JOptionPane.showMessageDialog(null,"Error");
                     }
                     ct.close();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        ELIMINARButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection pk;
+                String borrar = "DELETE FROM datosEstudiantes WHERE Id="+id.getText();
+                try {
+                    pk = getConecction();
+                    pd = pk.prepareStatement(borrar);
+                    pd.setString(1, id.getText());
+                    pd.executeUpdate();
+                    int res = pd.executeUpdate();
+                    if (res > 0) {
+                        JOptionPane.showMessageDialog(null,"Persona actualizada correctamente");
+                    } else {
+                        JOptionPane.showMessageDialog(null,"Error");
+                    }
+                    pk.close();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
