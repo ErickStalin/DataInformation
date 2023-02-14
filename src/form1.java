@@ -103,12 +103,12 @@ public class form1 {
         ELIMINARButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Connection pk;
-                String borrar = "DELETE FROM datosEstudiantes WHERE Id="+id.getText();
+                Connection con;
+                String id = Jtid.getText();
                 try {
-                    pk = getConecction();
-                    pd = pk.prepareStatement(borrar);
-                    pd.setString(1, id.getText());
+                    con = getConnection();
+                    pd eliminar;
+                    eliminar = con.prepareStatement("DELETE FROM datosEstudiantes WHERE Id="+id); 
                     pd.executeUpdate();
                     int res = pd.executeUpdate();
                     if (res > 0) {
@@ -116,9 +116,9 @@ public class form1 {
                     } else {
                         JOptionPane.showMessageDialog(null,"Error");
                     }
-                    pk.close();
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
+                    con.close();
+                } catch (HeadlessException | SQLException f) {
+                    System.err.println(f);
                 }
             }
         });
